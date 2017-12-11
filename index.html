@@ -2,68 +2,120 @@
 <html>
 
 <head>
-<title>CoffeeMaps</title>
-<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link rel="apple-touch-icon" href="images/Cash.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="js/leaflet/leaflet.css">
-<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
-<link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
-<!--[if lte IE 8]> <link rel="stylesheet" href="js/leaflet/leaflet.ie.css"> <![endif]-->
-<style>
-    html, body, #map { box-sizing: border-box; margin: 0 0 0 0; padding: 0; width: 100%; height: 100%; }
-    body{padding-top:41px;}/*top padding because navbar is position fixed*/
-    .leaflet-container .leaflet-control-attribution { font-size: 13px; }
-    .navbar-inner{-webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;}
-    .navbar{margin-bottom:0;position:fixed;top:0;z-index:1;width:100%;}
-    .search-query{width:90px;}
-    .loading{width: 100%;height: 100%;opacity: 0.6;position: fixed;bottom: 900px;top: 41px;z-index: 2;background-color:grey;text-align:center;}
-</style>
-<script type="text/javascript" src="http://ip-geo.appspot.com/geo_data.js"></script>
-<script src="js/leaflet/leaflet.js"></script>
-<script src="js/js.js"></script>
+    <title>CoffeeMaps</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="apple-touch-icon" href="images/Cash.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="js/leaflet/leaflet.css">
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+    <!--[if lte IE 8]> <link rel="stylesheet" href="js/leaflet/leaflet.ie.css"> <![endif]-->
+    <style>
+        html,
+        body,
+        #map {
+            box-sizing: border-box;
+            margin: 0 0 0 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            padding-top: 41px;
+        }
+
+        .leaflet-container .leaflet-control-attribution {
+            font-size: 13px;
+        }
+
+        .navbar-inner {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+
+        .navbar {
+            margin-bottom: 0;
+            position: fixed;
+            top: 0;
+            z-index: 1;
+            width: 100%;
+        }
+
+        .search-query {
+            width: 90px;
+        }
+
+        #loading {
+            width: 100%;
+            height: 100%;
+            opacity: 0.6;
+            position: fixed;
+            bottom: 900px;
+            top: 41px;
+            z-index: 2;
+            background-color: grey;
+            text-align: center;
+        }
+    </style>
+    <script src="js/leaflet/leaflet.js"></script>
+    <script src="js/js.js"></script>
 
 </head>
+
 <body>
-<div class="navbar navbar-inverse">
-	<div class="navbar-inner">
-		<a class="brand" href="#"><i class="icon-coffee icon-white"></i>CoffeeMaps</a>
-		<div class="container">
-    		<form class="navbar-search pull-right" action="" id="filter" autocomplete="off">
-        		<input type="text" class="search-query" placeholder="Postcode" autocomplete="off" id="q">
-    		</form>
-    		<ul id="distanceSelector" class="nav nav-collapse collapse pull-right">
-                <li class="active">
-    				<a href="#" data-time="0">Any</a>
-  				</li>
-  				<li><a href="#" data-time="5">&lt; 5 mins</a></li>
-  				<li><a href="#" data-time="20">&lt; 20 mins</a></li>            	
-  				<li class="divider-vertical"></li>
-            </ul>
+    <div class="navbar navbar-inverse">
+        <div class="navbar-inner">
+            <a class="brand" href="#">
+                <i class="icon-coffee icon-white"></i>CoffeeMaps</a>
+            <div class="container">
+                <form class="navbar-search pull-right" action="" id="filter" autocomplete="off">
+                    <input type="text" class="search-query" placeholder="Postcode" autocomplete="off" id="q">
+                </form>
+                <ul class="nav nav-collapse collapse pull-right">
+                    <li class="active">
+                        <a href="#" class="distance-selector" data-time="0">Any</a>
+                    </li>
+                    <li>
+                        <a href="#" class="distance-selector" data-time="5">&lt; 5 mins</a>
+                    </li>
+                    <li>
+                        <a href="#" class="distance-selector" data-time="20">&lt; 20 mins</a>
+                    </li>
+                    <li class="divider-vertical"></li>
+                </ul>
+            </div>
         </div>
-    </div><!-- /navbar-inner -->
-</div>
+        <!-- /navbar-inner -->
+    </div>
 
-<div id="map"></div>
-<div class="loading" style="display:none;">
-	<div style="display:table;width:100%;height:100%;">
-		<i class="icon-spinner icon-spin icon-4x" style="display: table-cell; vertical-align:middle;"></i>
-	</div>
-</div>
+    <div id="map"></div>
+    <div id="loading" style="display:none;">
+        <div style="display:table;width:100%;height:100%;">
+            <i class="icon-spinner icon-spin icon-4x" style="display: table-cell; vertical-align:middle;"></i>
+        </div>
+    </div>
 
-<script>
-    coffee.init();
-    $('#distanceSelector li a').on('click',function(){
-    	$('#distanceSelector li').removeClass('active');
-        $(this).parent().addClass('active');
-        coffee.setDistance(parseInt($(this).data('time')));
-        coffee.lookup();
-    });
-    coffee.geolocation();
-</script>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    <script>
+        coffee.init(document.getElementById('loading'));
+        document.querySelectorAll('.distance-selector').forEach(function (el) {
+            el.onclick = function () {
+                document.querySelectorAll('.distance-selector').forEach(function (el) {
+                    el.parentNode.className = '';
+                });
+                el.parentNode.className = 'active';
+                coffee.setDistance(parseInt(el.dataset.time));
+                coffee.lookup();
+                return false;
+            }
+        });
+        coffee.geolocation();
+    </script>
+    <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = "https://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
 
 </body>
+
 </html>
